@@ -1,0 +1,257 @@
+html,body{width:100%;color:#2E2E2E;font:14px Arial}
+body,div,ul,li,h1,h2,p,img,form,table,tr,td{margin:0;padding:0;border:0}
+body{margin: 0 auto;width: 100%;min-width:1000px;}
+table{width:100%;border-collapse:collapse;}
+ul li{list-style:none}
+h1{font-size:16px;font-weight:bold;margin:10px 0 0 10px;text-align:left}
+h2{font-size:14px;font-weight:bold}
+#center{height:100%;padding:10px;overflow:hidden;text-align:center}
+#head{width:100%;height:102px;border:1px solid #3300CC;float:left;overflow:hidden}
+/*#head a{width:200px;height:100px;border:1px solid #FF0033;display:block;float:left}*/
+#head .data{width:170px;float:right}
+#head .info{width:500px;float:left;font:13px Arial;text-align:left;padding:10px}
+#head .info .zgl{color:#FF0000}
+#head .data div{width:200px;height:20px;float:left;font:14px Arial}
+#head .data .exit{width:200px;height:20px;border:none;display:block;float:left}
+#tmenu{height:25px;display:block;float:left;width:100%}
+#tmenu a{font:bold 14px/25px Arial;color:#3366FF;margin:0 10px;display:block;height:25px;float:left}
+#tmenu .rgh{float:right}
+#main{width:100%;float:left;text-align:left}
+
+#main .colors{width:auto;margin-top:20px}
+#main .colors td{height:40px;padding:5px;border:1px solid #000}
+#main .colors .img{width:100%;width:50px}
+#main .colors .img img{width:50px;height:50px}
+
+#main .selfile td{padding:2px 0}
+#main  .process{margin-left:20px}
+#main  .process li{margin:2px 0}
+#main  .doptbl{float:left;width:1000px;clear:both}
+#main  .doptbl table{width:auto}
+#main  .doptbl  .brand{width:100%;margin:20px}
+#main  .doptbl  .brand td{border:1px solid #000}
+#main  .doptbl  .brand .id{width:30px}
+#main  .doptbl  .brand .syn{width:100px}
+#main  .doptbl  .brand .name{width:250px}
+#main  .doptbl  .brand .name select{width:100%}
+#main  .doptbl  .brand .but{width:90px}
+#main  .doptbl  .brand .but input{width:90%}
+#main  .tovar{width:auto;margin:20px;float:left}
+#main  .tovar td{border:1px solid #000;padding:0 5px;font:12px Arial}
+#main  .tovar .head td{padding:5px 5px;font:bold 12px Arial}
+#main  .tovar .id{width:80px}
+#main  .tovar .brand{width:110px}
+#main  .tovar .t3{width:30px}
+#main  .tovar .model{width:150px}
+#main  .tovar .t4{width:30px}
+#main  .tovar .prof{width:50px}
+#main  .tovar .t5{width:30px}
+#main  .tovar .t6{width:30px}
+#main  .tovar .t7{width:30px}
+#main  .tovar .t8{width:30px}
+#main  .tovar .diam{width:40px}
+#main  .tovar .gruz{width:60px}
+#main  .tovar .speed{width:40px}
+#main  .log{width:500px;border:1px solid #300;background:#ddd;margin:10px auto;padding:5px}
+#main  .log table td{text-align:left;height:30px;font:14px Arial;width:300px}
+#main  .log table td input{width:290px}
+#main  .log table td textarea{width:290px;height:100px;resize: none;}
+#main  .log table .name{width:200px;font-weight:bold}
+#main  .log table .name span{color:#f00}
+#main  .log table{width:auto}
+#main  .log table .butt{text-align:right}
+#main  .log table .butt input{width:100px;margin-right:5px}
+#main  .log .login td{text-align:left;height:30px;font:14px Arial;width:150px}
+#main  .log .login td input{width:140px}
+#f_pod{border:1px solid #300;background:#ddd;padding:5px;overflow:hidden;height:230px}
+#f_pod .chpr{float:left;height:200px;width:230px}
+#f_pod .chpr table{border:1px solid #000}
+#f_pod .chpr table td{padding:3px;height:16px}
+#f_pod .chpr table .ka{float:left;text-align:left;font:13px/16px Arial}
+#f_pod .chpr table .kai input{width:30px}
+#f_pod .flt{float:left;display:block;overflow:hidden;height:230px}
+#f_pod .flt table{width:600px}
+#f_pod .flt table td{width:150px;padding:5px 0;text-align:left}
+#f_pod .flt table td .tov{display:block;width:50px;text-align:left;float:left;height:20px;font:bold 13px Arial;color:#330099}
+#f_pod .flt table td select{width:140px}
+#f_pod .flt table td div{height:20px;width:150px;float:left}
+#f_pod .flt table .calend div{height:20px;width:200px;float:left}
+#f_pod .flt table .calend div a{height:16px;width:16px;float:right;display:block;background:url(/images/design/calendar.jpg) no-repeat;margin:2px 6px}
+#f_pod .flt table .poisk input{width:286px;height:14px}
+#f_pod .flt table .button{text-align:right}
+#f_pod .flt table .button input{width:100px;height:30px}
+#nomens{padding:20px 0}
+#nomens table{width:auto}
+#nomens table .head td{font:bold 13px Arial;text-align:center;height:40px;padding:3px;vertical-align:middle}
+#nomens table .moder td{background:#DDD}
+#nomens table .head .kaprice{font:bold 13px Arial;text-align:center;height:40px;padding:3px;vertical-align:middle;width:70px}
+#nomens table .head .login{width:50px}
+#nomens table .head .email{width:170px}
+#nomens table .head .comp{width:120px}
+#nomens table .head .manager{width:90px}
+#nomens table .head .adr{width:200px}
+#nomens table .head .dst{width:70px}
+#nomens table .head .group{width:100px}
+#nomens table .head .edit{width:30px}
+#nomens table td{border:1px solid #000;font:13px/20px Arial;height:20px;padding:2px 5px}
+#nomens table .idtov{width:50px}
+#nomens table .name{width:450px}
+#nomens table .nm{font:13px Arial;text-align:left}
+#nomens table .count{width:50px}
+#nomens table .price{width:90px}
+#nomens table .suppl{width:110px}
+#nomens table .skld{background:#DDDDDD}
+#nomens table .cntbsk{width:60px;text-align:center;padding:0}
+#nomens table .cntbsk input{width:55px}
+#nomens table .butbsk{width:60px;text-align:center;padding:0}
+#nomens table .butbsk input{width:60px;font:12px Arial}
+#nomens table .pages td{height:20px;border:none;padding:5px;text-align:left}
+#nomens table .pages td span{margin:0 3px}
+#nomens table .pages td a{margin:0 3px}
+#main .leftmenu{float:left;width:180px;border:1px solid #bbb;padding:10px}
+#main .leftmenu a{display:block;float:left;width:180px;height:20px;font:normal 14px arial;color:#0000FF;text-decoration:none}
+#main .rght{float:left}
+#main .block{width:250px;float:left;height:120px;border:1px solid #999999;margin:3px}
+#main .block table td{padding:2px}
+#deskr{width:700px;display:block}
+#deskr table{width:100%}
+#deskr table td select{width:300px}
+#deskr table td textarea{width:700px;height:500px}
+.kurs input{width:20px}
+#mes{min-height:80px;width:300px;position:absolute;left:0;top:0;z-index:3;background:#DDD;display:none;border:1px solid #000}
+#mes div{float:left;width:280px;padding:0 10px}
+#mes .meshd{height:20px;font:bold 13px Arial;border-bottom:1px solid #000}
+#mes .meshd div{padding:0;height:20px;float:left;}
+#mes .meshd .left{font:bold 13px/20px Arial;color:#666;width:220px}
+#mes .meshd .right{width:60px;text-align:center}
+#mes .meshd .right a{font:13px Arial;color:#CC0000}
+#mes .mesmn{font:13px Arial;color:#666;margin:10px 0}
+#bask{width:700px;margin:0 auto}
+#bask h1{margin:10px 0 15px 0}
+#bask table{border:2px solid #000;width:99%}
+#bask table td{border:1px solid #000;padding:5px;font:normal 13px Arial}
+#bask table td input{width:40px;font:normal 13px Arial;text-align:center;margin-right:5px}
+#bask table .hd td{font:bold 13px Arial;text-align:center;border-bottom:2px solid #000;background:#6699CC}
+#bask table .zg{background:#69C}
+#bask table .itog td{font:bold 13px Arial;border-top:2px solid #000}
+#bask table .nm{width:480px;text-align:left;}
+#bask table .nm .opdst{width:240px;float:right;font:12px Arial}
+#bask .b_dost{width:650px}
+#itog{color:#900}
+#resp{width:500px;margin:20px auto}
+#resp h2{margin:0 0 10px 0}
+#resp table{border:2px solid #000}
+#resp table td{text-align:left;padding:3px 5px;font:13px Arial;border:1px solid #000}
+#resp table .nm{width:200px;font:bold 13px Arial}
+#resp table .button{text-align:right}
+#resp table .contrl input{width:250px}
+#resp table .contrl textarea{width:250px;height:100px;resize:none}
+#resp table .nm span{color:#FF0033}
+#resp table .hd{background: none repeat scroll 0 0 #6699CC;font: bold 13px Arial;text-align: center;border:2px solid #000}
+.calend{width:200px;font:13px Arial}
+.calend select{width:45px;margin-right:5px}
+.calend .monf{width:90px}
+.calend input{width:45px;height:14px}
+#views table td{border:1px solid #000}
+#views table td input{width:98%;border:none}
+#views table td select{width:98%;border:none}
+#views table .add input{width:16px;height:16px;background:url(/images/icon2/add.gif) no-repeat;cursor:pointer}
+#views table td .delete-row{width:16px;height:16px;background:url(/images/icon2/delete.gif) no-repeat;cursor:pointer}
+#views table td .cancel-row{width:16px;height:16px;background:url(/images/icon2/cancel.gif) no-repeat;cursor:pointer}
+.ul-res{}
+.sp{width:100%}
+.sp td{border:1px solid #AAA;padding:3px 5px;font:13px Arial;color: #555}
+.ed{width:auto;margin:20px 0 0 10px}
+.ed td{border:1px solid #AAA;padding:3px 5px;font:13px Arial;color: #555}
+.ed td input,.ed td select{width:99%}
+.ed .title{width:150px;font-weight:bold}
+.ed .control{width:100px}
+.ed .control textarea{min-width:300px;min-height:50px;width:99%}
+.ed .control1{width:300px}
+.ed .but{text-align:center;width:200px}
+.ed .but input{width:auto}
+.a-l-menu{display:block;width:140px;padding:5px;font:bold 13px Arial;color:#0000CC}
+.h3-lmenu{display:block;width:140px;padding:0;font:bold 13px Arial;margin:5px 0}
+.error{float:left;padding:5px;margin:10px;color:#f00;font:13px Arial;width:100%}
+.snoska{font:11px Arial}
+
+#order-filter{border:1px solid #300;background:#ddd;padding:10px;overflow:hidden;height:130px;width:600px;margin-top:10px}
+#order-filter table td{width:30%;padding:3px}
+#order-filter table td input{width:98%}
+
+#orders-result{float:left;overflow:hidden}
+#orders-result table{width:auto}
+#orders-result td{border:1px solid #000;font:13px/20px Arial;height:20px;padding:2px 5px}
+#orders-result table .head td{font:bold 13px Arial;text-align:center;height:40px;padding:3px;vertical-align:middle}
+
+#order{text-align:center}
+#order .order-info{float:left;width:98%}
+#order .order-info table{width:600px;margin:10px auto}
+#order .order-info table td{border:1px solid #000;padding:3px;font:14px Arial;text-align:left}
+#order .order-info table .caption{font-weight:bold}
+
+#order .order-items{float:left;width:98%}
+#order .order-items table{width:600px;margin:10px auto}
+#order .order-items table td{border:1px solid #000;padding:3px;font:14px Arial;text-align:left}
+#order .order-items table .caption{font-weight:bold}
+
+
+#sp-pod{border:1px solid #300;background:#ddd;padding:5px;overflow:hidden;height:300px;width:600px}
+#sp-pod .chpr{float:left;height:200px;width:230px}
+#sp-pod .chpr table{border:1px solid #000}
+#sp-pod .chpr table td{padding:3px;height:16px}
+#sp-pod .chpr table .ka{float:left;text-align:left;font:13px/16px Arial}
+#sp-pod .chpr table .kai input{width:30px}
+#sp-pod .flt{float:left;display:block;overflow:hidden;height:300px}
+#sp-pod .flt table{width:600px}
+#sp-pod .flt table td{width:150px;padding:5px 0;text-align:left}
+#sp-pod .flt table td .tov{display:block;width:50px;text-align:left;float:left;height:20px;font:bold 13px Arial;color:#330099}
+#sp-pod .flt table td select{width:140px}
+#sp-pod .flt table td div{height:20px;width:150px;float:left}
+#sp-pod .flt table .calend div{height:20px;width:200px;float:left}
+#sp-pod .flt table .calend div a{height:16px;width:16px;float:right;display:block;background:url(/images/design/calendar.jpg) no-repeat;margin:2px 6px}
+#sp-pod .flt table .poisk input{width:286px}
+#sp-pod .flt table .button{text-align:right}
+#sp-pod .flt table .button input{width:100px;height:30px}
+.sp-pages{border:none;padding:5px;text-align:left;float:left;width:100%}
+.sp-pages span{margin:0 3px}
+.sp-pages a{margin:0 3px}
+
+.update{display:block;height:16px;float:left;font:14px/16px Arial}
+
+.image{width: 150px;
+height: 150px;
+float: left;
+border: 1px solid #000;
+margin: 5px;
+padding: 5px;}
+
+#curimg{clear:both; width:99%;padding:5px;margin:5px;border:1px solid #000}
+#curimg .caption{clear:both; width:99%;margin:3px}
+
+#imagefull, #url{clear:both;display:block;margin:3px 0}
+
+a>i {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    margin-left: 7px;
+}
+a>i.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+a>i.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+a>i.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+a>i.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+#sp-pod .flt table td div.sel-dop select{width:100px; margin-left:10px}

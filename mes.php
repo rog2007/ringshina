@@ -1,0 +1,2 @@
+<div id="mes"><div class="head"><div class="caption" id="m_h"></div><a href="#" onClick="ShowModalWindow(false,'','');return false;" class="close"></a></div>
+<div class="line"></div><div class="context"><p id="m_dv"></p></div></div>

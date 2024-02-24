@@ -1,0 +1,6 @@
+ErrorDocument 404 /error.php
+Options -Indexes +FollowSymLinks
+RewriteEngine on
+RewriteBase /
+RewriteRule ^(.*)\/$ /adm/index.php?$1 [QSA,L]
+RewriteRule ^(.*)\.html$ /adm/index.php?$1
