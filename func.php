@@ -368,46 +368,52 @@ function to_mysqldate($normaldate) {
 }
 
 function SelBrand($tb1) {
+    global $mysqli;
     $str = "select tb3_id, tb3_nm from tab3 where tb3_tov_id={$tb1} and wrk3=1 order by tb3_nm";
-    $result = mysql_query($str);
+    $result = mysqli_query($mysqli, $str);
     return $result;
 }
 
 function SelSeas($tb1) {
+    global $mysqli;
     $str = "select tb10_id, tb10_nm from tab10 where tb10_tov_id={$tb1} and tb10_vis=1 order by tb10_id";
-    $result = mysql_query($str);
+    $result = mysqli_query($mysqli, $str);
     return $result;
 }
 
 function IdByName($nm, $tbl, $field_id, $field_name) {
+    global $mysqli;
     $sql = "select {$field_id} from {$tbl} where {$field_name}='{$nm}'";
-    $result = mysql_query($sql);
-    if (@mysql_num_rows($result) == 0) {
+    $result = mysqli_query($mysqli, $sql);
+    if (mysqli_num_rows($result) == 0) {
         return 0;
-    } else {
-        return @mysql_result($result, 0, $field_id);
     }
+    return mysqli_fetch_assoc($result)[$field_id];
 }
 
 function IdByNameAddStup($nm) {
-
-    $sql = "select tb12_id from tab12 where tb12_nm = '{$nm}'";
-    $result = mysql_query($sql);
-    if (@mysql_num_rows($result) == 0) {
-
+    global $mysqli;
+    $res = IdByName($nm, "tab12", "tb12_id", "tb12_nm");
+    if ($res == 0) {
         $sql = "INSERT INTO tab12 (tb12_nm, tb12_tov_id, tb12_vis) values ('{$nm}', 2, 0)";
-        $result = mysql_query($sql);
-
-        $sql = "select tb12_id from tab12 where tb12_nm = '{$nm}'";
-        $result = mysql_query($sql);
-        return mysql_result($result, 0, 'tb12_id');;
-    } else {
-        return mysql_result($result, 0, 'tb12_id');
+        mysqli_query($mysqli, $sql);
+        $res = IdByName($nm, "tab12", "tb12_id", "tb12_nm");
     }
+    return $res;
+//    //$sql = "select tb12_id from tab12 where tb12_nm = '{$nm}'";
+//    $result = mysqli_query($mysqli, $sql);
+//    if (mysqli_num_rows($result) == 0) {
+//        $sql = "INSERT INTO tab12 (tb12_nm, tb12_tov_id, tb12_vis) values ('{$nm}', 2, 0)";
+//        $result = mysqli_query($mysqli, $sql);
+//        return IdByName($nm, "tab12", "tb12_id", "tb12_nm");
+//    } else {
+//        return IdByName($nm, "tab12", "tb12_id", "tb12_nm");
+//    }
 }
 
 /*функция для отображения номенклатур по моделям "group by tab4_id"*/
 function filter($tb1, $tab3, $pg, $cnt_pg, $auto) {
+    global $mysqli;
     $sql_lim = '';
     if ($cnt_pg > 0) {
         $first = ($pg - 1) * $cnt_pg;
@@ -442,13 +448,14 @@ function filter($tb1, $tab3, $pg, $cnt_pg, $auto) {
     t4ses, t4sh, t_auto_nm, auto_brand
     from tab4 left join imgs on imgs.idmodel=tb4_id left join tab3 on tb3_id=brand_id
     left join t_auto on auto_brand = t_auto_id " . $sql . " group by tb4_id order by " . $order . "tb4_nm " . $sql_lim;
-    $result = mysql_query($sql);
+    $result = mysqli_query($mysqli, $sql);
 
     return $result;
 }
 
 /*функция возвращает количество номенклатур по моделям "group by tab4_id"*/
 function filter_cnt($tb1, $tab3, $auto) {
+    global $mysqli;
     $sql = "where tb4_tov_id={$tb1} and wrk4=1";
     if ($tab3 || $tab3 == -1) {
         if ($tab3 == 50) {
@@ -463,18 +470,19 @@ function filter_cnt($tb1, $tab3, $auto) {
     }
     $sql = "select count(*) as cnt1 from tab4 " . $sql;
 
-    return mysql_result(mysql_query($sql), 0, "cnt1");
+    return mysqli_fetch_assoc(mysqli_query($mysqli, $sql))["cnt1"];
 }
 
 function filterCntAKB(/*$tab3*/) {
-
+    global $mysqli;
     $sql = "select count(*) as cnt1 from akb_model where vis = 1;"; // and akb_brand_id = " . $tab3;
-    return mysql_result(mysql_query($sql), 0, "cnt1");
+    return mysqli_fetch_assoc(mysqli_query($mysqli, $sql))["cnt1"];
 }
 
 function filterAKB(/*$tab3,*/
     $pg, $cnt_pg) {
     $sql_lim = '';
+    global $mysqli;
     if ($cnt_pg > 0) {
 
         $first = ($pg - 1) * $cnt_pg;
@@ -487,7 +495,7 @@ function filterAKB(/*$tab3,*/
     -1 as tab2_id, abr.id as tab3_id, abr.name as tb3_nm, amd.url as t4url, abr.url as t3url
     from akb_model as amd left join akb_brand as abr on abr.id = amd.akb_brand_id " . $sql . " order by amd.name " . $sql_lim;
 
-    $result = mysql_query($sql);
+    $result = mysqli_query($mysqli, $sql);
 
 
     return $result;
@@ -495,7 +503,7 @@ function filterAKB(/*$tab3,*/
 
 function NomenDiscs($tab3, $tab5, $tab6, $tab7, $tab8, $tab9, $tab91, $tab12, $priceFrom, $priceTo, $pg, $cnt_pg, $order,
                     $orderType) {
-
+    global $mysqli;
     $str_lim = '';
     if ($cnt_pg > 0) {
         $first = ($pg - 1) * $cnt_pg;
@@ -527,7 +535,7 @@ function NomenDiscs($tab3, $tab5, $tab6, $tab7, $tab8, $tab9, $tab91, $tab12, $p
     if ($tab12) {
 
         $tab12Nm = IdByName($tab12, 'tab12', 'tb12_nm', 'tb12_id');
-        $tb12Ar = split('[,.]', $tab12Nm);
+        $tb12Ar = preg_split('[,.]', $tab12Nm);
         $tab12Nm = (int)$tb12Ar[0];
 
         $sql .= ' and (tab12_id = ' . $tab12 . ' OR (tb12_nm * 1) BETWEEN ' . $tab12Nm . ' AND ' . ($tab12Nm + 0.99) . ')';
@@ -551,12 +559,12 @@ function NomenDiscs($tab3, $tab5, $tab6, $tab7, $tab8, $tab9, $tab91, $tab12, $p
     left join t_auto ON t_auto_id = auto_brand
     " . $sql . " ORDER BY " . $order . ' ' . $orderType . ' ' . $str_lim;
     //echo $sql;
-    $result = mysql_query($sql);
+    $result = mysqli_query($mysqli, $sql);
     return $result;
 }
 
 function ModelsDiscs($tab3, $pg, $cnt_pg) {
-
+    global $mysqli;
     $str_lim = '';
     if ($cnt_pg > 0) {
 
@@ -574,13 +582,13 @@ function ModelsDiscs($tab3, $pg, $cnt_pg) {
     from total left join imgs on imgs.idmodel=tab4_id and imgs.idcolor=tab2_id
     left join tab2 on tb2_id=tab2_id left join tab3 on tb3_id=tab3_id
     left join tab4 on tb4_id=tab4_id left join t_auto ON t_auto_id = auto_brand " . $sql . " group by tab4_id order by tb3_nm, tb4_nm " . $str_lim;
-    $result = mysql_query($sql);
+    $result = mysqli_query($mysqli, $sql);
     //echo $sql;
     return $result;
 }
 
 function ModelsTyres($tab3, $tab10, $ship, $pg, $cnt_pg) {
-
+    global $mysqli;
     $str_lim = '';
     if ($cnt_pg > 0) {
 
@@ -623,11 +631,12 @@ function ModelsTyres($tab3, $tab10, $ship, $pg, $cnt_pg) {
     tb4_nm as T4Nm,tb3_nm as T3Nm, brand_id,tb4_id, t4ses, t4sh
     FROM tab4 left join imgs on imgs.idmodel=tb4_id and brand_id = idbrand
     left join tab3 on tb3_id=brand_id " . $sql . " order by " . $order . " tb4_nm " . $str_lim;
-    $result = mysql_query($sql);
+    $result = mysqli_query($mysqli, $sql);
     return $result;
 }
 
 function NomenTyres($tab3, $profw, $profh, $tab6, $tab10, $priceFrom, $priceTo, $ship, $pg, $cnt_pg, $order, $orderType) {
+    global $mysqli;
     $str_lim = '';
     if ($cnt_pg > 0) {
         $first = ($pg - 1) * $cnt_pg;
@@ -687,24 +696,25 @@ function NomenTyres($tab3, $profw, $profh, $tab6, $tab10, $priceFrom, $priceTo, 
         'LEFT JOIN tab12 on tb12_id=tab12_id ' .
         'LEFT JOIN profw ON w_id = profw.id ' .
         'LEFT JOIN profh ON h_id = profh.id ' . $sql . ' ORDER BY ' . $order . ' ' . $orderType . $str_lim;
-    $result = mysql_query($sql);
+    $result = mysqli_query($mysqli, $sql);
 //    echo $sql;
     return $result;
 }
 
 function NomenRasp($tb1) {
-
+    global $mysqli;
     $sql = 'where wrk = 1 and tab1_id = ' . $tb1;
     $sql = "select total_id,all_name,tb3_pic as T3Pic,ifnull(nullif(trim(pid),''),'-') as T4Pic,tb4_nm as T4Nm,tb6_nm,tb7_nm,tb8_nm,price,tb3_nm as T3Nm,tab9_id,tb9_nm as t9n,tb12_nm as t12n,tb5_nm as t5n,
     tab10_id,tb4_nm as T4Nm,tab2_id,tb10_pic as t10p,tb2_pic as t2p,cnt from total left join imgs on mid=tab4_id " . ($tb1 == 2 ? "and cid=tab2_id" : "") . " left join tab3 on tb3_id=tab3_id left join tab6 on tb6_id=tab6_id
     left join tab4 on tb4_id=tab4_id left join tab7 on tb7_id=tab7_id left join tab8 on tb8_id=tab8_id left join tab5 on tb5_id=tab5_id
     left join tab2 on tb2_id=tab2_id left join tab10 on tb10_id=tab10_id left join tab9 on tb9_id=tab9_id left join tab12 on tb12_id=tab12_id
     {$sql} order by cnt desc,all_name  limit 0,6";
-    $result = mysql_query($sql);
+    $result = mysqli_query($mysqli, $sql);
     return $result;
 }
 
 function NomenCntDisc($tab3, $tab5, $tab6, $tab7, $tab8, $tab9, $tab91, $tab12, $priceFrom, $priceTo) {
+    global $mysqli;
     $str = 'where wrk=1 and tab1_id=2';
     if (!empty($tab3)) {
         $str .= " and tab3_id  in (" . implode(',', $tab3) . ')';
@@ -732,7 +742,7 @@ function NomenCntDisc($tab3, $tab5, $tab6, $tab7, $tab8, $tab9, $tab91, $tab12, 
     if ($tab12) {
 
         $tab12Nm = IdByName($tab12, 'tab12', 'tb12_nm', 'tb12_id');
-        $tb12Ar = split('[,.]', $tab12Nm);
+        $tb12Ar = preg_split('[,.]', $tab12Nm);
         $tab12Nm = (int)$tb12Ar[0];
 
         $str .= ' and (tab12_id = ' . $tab12 . ' OR (tb12_nm * 1) BETWEEN ' . $tab12Nm . ' AND ' . ($tab12Nm + 0.99) . ')';
@@ -745,11 +755,12 @@ function NomenCntDisc($tab3, $tab5, $tab6, $tab7, $tab8, $tab9, $tab91, $tab12, 
         $str .= ' and price <= ' . $priceTo;
     }
     $str = 'select count(*) as cnt from total left join tab9 on tb9_id=tab9_id LEFT JOIN tab12 ON tab12_id = tb12_id ' . $str;
-    return mysql_result(mysql_query($str), 0, "cnt");
+    return mysqli_fetch_assoc(mysqli_query($mysqli, $str))["cnt"];
 }
 
 function NomenAkb($volume, $volumeFrom, $volumeTo, $volt, $rvrt, $klem, $priceFrom, $priceTo, $pg, $cnt_pg, $order,
                   $orderType) {
+    global $mysqli;
     $str_lim = '';
     if ($cnt_pg > 0) {
 
@@ -797,12 +808,12 @@ function NomenAkb($volume, $volumeFrom, $volumeTo, $volt, $rvrt, $klem, $priceFr
         left join akb_rvrt as ar on at.rvrt = ar.id
         left join akb_volt as avl on at.id_volt = avl.id " . $str . "
         ORDER BY " . $order .' ' . $orderType . $str_lim;
-    $result = mysql_query($sql);
+    $result = mysqli_query($mysqli, $sql);
     return $result;
 }
 
 function NomenCntAkb($volume, $volumeFrom, $volumeTo, $volt, $rvrt, $klem, $priceFrom, $priceTo) {
-
+    global $mysqli;
     $str = 'where akb_tovar.vis=1';
     if ($volumeFrom <> "" || $volumeTo <> "") {
 
@@ -834,11 +845,11 @@ function NomenCntAkb($volume, $volumeFrom, $volumeTo, $volt, $rvrt, $klem, $pric
         $str .= ' and price <= ' . $priceTo;
     }
     $str = 'select count(*) as cn from akb_tovar left join akb_v on id_v = akb_v.id ' . $str;
-    return mysql_result(mysql_query($str), 0, "cn");
+    return mysqli_fetch_assoc(mysqli_query($mysqli, $str))["cn"];
 }
 
 function ModelsCntTyre($tab3, $tab10, $ship) {
-
+    global $mysqli;
     $str = 'where wrk4=1 and tb4_tov_id=1';
     if (!empty($tab3)) {
         $str .= " and brand_id in (" . implode(',', $tab3) . ')';
@@ -865,21 +876,21 @@ function ModelsCntTyre($tab3, $tab10, $ship) {
     }
     $str = 'select count(*) as cnt from tab4 ' . $str;
 
-    return mysql_result(mysql_query($str), 0, "cnt");
+    return mysqli_fetch_assoc(mysqli_query($mysqli, $str))["cnt"];
 }
 
 function ModelsCntDisc($tab3) {
-
+    global $mysqli;
     $str = 'where wrk4=1 and tb4_tov_id=2';
     if (!empty($tab3)) {
         $str .= " and brand_id in (" . implode(',', $tab3) . ')';
     }
     $str = 'select count(*) as cnt from tab4 ' . $str;
-    return mysql_result(mysql_query($str), 0, "cnt");
+    return mysqli_fetch_assoc(mysqli_query($mysqli, $str))["cnt"];
 }
 
 function NomenCntTyre($tab3, $profw, $profh, $tab6, $tab10, $priceFrom, $priceTo, $ship) {
-
+    global $mysqli;
     $str = 'where wrk=1 and tab1_id=1';
     if (!empty($tab3)) {
         $str .= " and tab3_id  in (" . implode(',', $tab3) . ')';
@@ -921,7 +932,7 @@ function NomenCntTyre($tab3, $profw, $profh, $tab6, $tab10, $priceFrom, $priceTo
     }
     $str = 'select count(*) as cnt from total left join tab4 on tb4_id=tab4_id ' . $str;
 //    echo $str;
-    return mysql_result(mysql_query($str), 0, "cnt");
+    return mysqli_fetch_assoc(mysqli_query($mysqli, $str))["cnt"];
 }
 
 

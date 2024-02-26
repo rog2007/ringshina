@@ -2,8 +2,8 @@
   $tit="Индекс нагрузки";
   $desk="Индекс нагрузки для автомобильных шин";
   $kw="Индекс нагрузки";
-  $res=mysql_query("select txt from pages where pg='".$page."'");
-  if($rs=mysql_fetch_object($res))
+  $res=mysqli_query("select txt from pages where pg='".$page."'");
+  if($rs=mysqli_fetch_object($res))
   $str.=$rs->txt;
   //$h1="Индекс нагрузки";
   /*$str="<h1>".$h1."</h1>

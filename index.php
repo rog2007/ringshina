@@ -72,8 +72,8 @@ if ((trim($var[1]) != '') && ($var[1]))
 else
     $page = 'index';
 
-$res = mysql_query("select * from pages where pg='" . $var[1] . "'");
-if ($curpage = mysql_fetch_object($res)) {
+$res = mysqli_query($mysqli, "select * from pages where pg='" . $var[1] . "'");
+if ($curpage = mysqli_fetch_object($res)) {
 
     $var[1] = 'static';
 }

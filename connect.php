@@ -7,7 +7,7 @@ if ($hostArr[0] == 'www') {
 } else {
     $domainIndex = 1;
 }
-if ($hostArr[$domainIndex] == 'dev') {
+if ($hostArr[$domainIndex] == 'dev' || $hostArr[$domainIndex] == 'loc') {
     $isDevelop = true;
 }
 
@@ -16,10 +16,10 @@ if ($isDevelop) {
 
     $imgLinkPrefix = 'https://www.ringshina.ru';
     define('DB_DRIVER', 'mysql');
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', 'mysql');
     define('DB_NAME', 'ringshina');
     define('DB_USER', 'root');
-    define('DB_PASS', '');
+    define('DB_PASS', 'secret');
     define('DB_PORT', '3306');
 } else {
 
@@ -38,9 +38,16 @@ try {
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());
 }
-mysql_connect(DB_HOST, DB_USER, DB_PASS);
-mysql_select_db(DB_NAME) or die("Unable to select database");
+//mysqli_connect(DB_HOST, DB_USER, DB_PASS);
+//mysqli_select_db(DB_NAME) or die("Unable to select database");
+//
+//mysqli_query("set character_set_client='utf8'");
+//mysqli_query("set character_set_results='utf8'");
+//mysqli_query("set collation_connection='utf8_general_ci'");
 
-mysql_query("set character_set_client='utf8'");
-mysql_query("set character_set_results='utf8'");
-mysql_query("set collation_connection='utf8_general_ci'");
+$mysqli = mysqli_connect(DB_HOST, DB_USER, DB_PASS);
+mysqli_select_db($mysqli, DB_NAME) or die("Unable to select database");
+
+mysqli_query($mysqli, "set character_set_client='utf8'");
+mysqli_query($mysqli, "set character_set_results='utf8'");
+mysqli_query($mysqli, "set collation_connection='utf8_general_ci'");
