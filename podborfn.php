@@ -4,42 +4,45 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 require("connect.php");
 require ('funcSQL.php');
+require ("callAPI.php");
+require ("funcPodbor.php");
 
-function prepareResult($res) {
-    if (!$res['result']) {
-        return 'ERROR [' . $res['error'][0] . ' - ' . $res['error'][1] . '] "' . $res['error'][2] . '"';
-    }
-    $str_pod = '';
-    if (count($res['data']) > 0) {
-        foreach ($res['data'] as $rs) {
-            if (!empty($str_pod)) {
-                $str_pod .= '$';
+function prepareResult($res, $step=0) {
+    $result = "";
+    foreach ($res as $key => $value){
+        if(!empty($result)){
+            $result .= "$";
+        }
+        $result .= $value["slug"] . " | " . $value["name"];
+        if($step == 3){
+            if(count($value["trim_levels"])){
+                $result .= " " . $value["trim_levels"][0];
             }
-            $str_pod .= $rs->nm . " | " . $rs->nm;
         }
     }
-    return $str_pod;
+    return $result;
 }
 
 
 $step = filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT);
 $vendor = filter_input(INPUT_POST, 'firm');
 $car = filter_input(INPUT_POST, 'model');
-$year = filter_input(INPUT_POST, 'year', FILTER_VALIDATE_INT);
+$year = filter_input(INPUT_POST, 'year');
+$url = "https://api.wheel-size.com/v2/";
+$user_key = "user_key=467886d78550ce67d42cd4591173155a";
 
 if ($step == 1) {
-    $res = query('SELECT car AS nm FROM podbor_shini_i_diski WHERE vendor=:vendor GROUP BY car ORDER BY car',
-        [':vendor' => $vendor]);
+    $res = getData($vendor);
+    //$res = callAPI($url . "models/?make=" . $vendor . "&" . $user_key);
     echo prepareResult($res);
 }
 if ($step == 2) {
-    $res = query('SELECT `year` AS nm FROM podbor_shini_i_diski WHERE vendor = :vendor AND car = :car ' .
-        'GROUP BY year ORDER BY year DESC', [':vendor' => $vendor, ':car' => $car]);
+    $res = getData($vendor, $car);
+    //$res = callAPI($url . "years/?make=" . $vendor . "&model=" . $car . "&" . $user_key);
     echo prepareResult($res);
 }
 if ($step == 3) {
-    $res = query('SELECT modification AS nm FROM podbor_shini_i_diski WHERE vendor = :vendor AND car = :car ' .
-        'AND `year` = :year GROUP BY modification ORDER BY modification',
-        [':vendor' => $vendor, ':car' => $car, ':year' => $year]);
-    echo prepareResult($res);
+    $res = getData($vendor, $car, $year);
+    //$res = callAPI($url . "modifications/?make=" . $vendor . "&model=" . $car . "&year=" . $year . "&" . $user_key);
+    echo prepareResult($res, $step);
 }

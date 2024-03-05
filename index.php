@@ -306,14 +306,15 @@ if ($page != "index") {
                                             <select id="vend" name="vend" onchange="return podbor_ajax(1)" class="no-custom medium">
                                                 <option value="0"<?php echo ($autoVend == 0 ? ' selected="selected"' : ''); ?>>все</option>
                                                 <?php
-                                                $selProfWidth = $dbcon->prepare('select vendor from podbor_shini_i_diski group by vendor order by vendor');
-                                                if ($selProfWidth->execute() && $selProfWidth->rowCount() > 0) {
-                                                    while ($resObj = $selProfWidth->fetch(PDO::FETCH_OBJ)) {
-                                                        echo '<option value="' . $resObj->vendor . '"' . ($autoVend === $resObj->vendor ? ' selected="selected"' : '') . '>' . $resObj->vendor . '</option>';
+                                                $madeList = getData();
+                                                if ($madeList != false) {
+                                                    foreach($madeList as $key => $value){
+                                                        echo '<option value="' . $value["slug"] . '"' . ($autoVend === $value["slug"] ? ' selected="selected"' : '') . '>' . $value["name"] . '</option>';
                                                     }
                                                 }
                                                 ?>
                                             </select>
+                                            <input type="hidden" value=""  id="vend_name" name="vend_name" />
                                             <label for="model"><b>Марка авто</b></label>
                                             <select id="model" name="model" class="no-custom medium" onchange="return podbor_ajax(2)"<?php echo ($autoVend ? '' : ' disabled="disabled"') ?>>
                                                 <option value="0"<?php echo ($autoModel == 0 ? ' selected="selected"' : ''); ?>>все</option>
@@ -329,6 +330,7 @@ if ($page != "index") {
                                                 }
                                                 ?>
                                             </select>
+                                            <input type="hidden" value=""  id="model_name" name="model_name" />
                                             <label for="year"><b>Год выпуска</b></label>
                                             <select id="year" name="year" class="no-custom medium" onchange="return podbor_ajax(3)"<?php echo ($autoModel ? "" : ' disabled="disabled"') ?>>
                                                 <option value="0"<?php echo ($autoYear == 0 ? ' selected="selected"' : ''); ?>>все</option>
@@ -345,7 +347,7 @@ if ($page != "index") {
                                                 ?>
                                             </select>
                                             <label for="modif"><b>Модификация</b></label>
-                                            <select id="modif" name="modif" class="no-custom medium" onchange="document.pauto.submit();"<?php echo ($autoYear ? "" : ' disabled="disabled"') ?>>
+                                            <select id="modif" name="modif" class="no-custom medium" onchange="podborSubmit()"<?php echo ($autoYear ? "" : ' disabled="disabled"') ?>>
                                                 <option value="0"<?php echo ($autoModif === 0 ? ' selected="selected"' : ''); ?>>все</option>
                                                 <?php
                                                 if ($autoYear) {
@@ -360,6 +362,7 @@ if ($page != "index") {
                                                 }
                                                 ?>
                                             </select>
+                                            <input type="hidden" value=""  id="modif_name" name="modif_name" />
                                         </form>
                                     </div>
                                 </section>

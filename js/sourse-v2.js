@@ -552,6 +552,15 @@ function calc2() {
     return false;
 }
 
+function podborSubmit() {
+
+    var frm = document.pauto;
+    frm.modif_name.value = frm.modif.options[frm.modif.selectedIndex].text;
+    frm.model_name.value = frm.model.options[frm.model.selectedIndex].text;
+    frm.vend_name.value = frm.vend.options[frm.vend.selectedIndex].text;
+    document.pauto.submit();
+}
+
 function podbor_ajax(st)
 {
     var frm = document.pauto;
@@ -566,6 +575,7 @@ function podbor_ajax(st)
     oXmlHttp.open("post", "/podborfn.php", true);
     oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     oXmlHttp.onreadystatechange = function () {
+        console.log(oXmlHttp.responseText);
         if (oXmlHttp.readyState == 4) {
 
             if (oXmlHttp.status == 200) {
@@ -624,7 +634,6 @@ function podbor_ajax(st)
                     node.appendChild(document.createTextNode("выберите модификацию"));
                     frm.modif.appendChild(node);
                     var s = oXmlHttp.responseText;
-//        alert(s);
                     AddSelectPodb(frm.modif, s, "0");
                     frm.modif.disabled = "";
                 }

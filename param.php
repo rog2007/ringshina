@@ -320,7 +320,7 @@ if (!isset($_GET['paramsmb'])) {
         '<a href="' . $lnkk . '1-price-ASC.html"' . ($order == 'price' && $orderType == 'ASC' ? ' class="current"' : '') . '>По возрастанию цены</a>' .
         '<a href="' . $lnkk . '1-price-DESC.html"' . ($order == 'price' && $orderType == 'DESC' ? ' class="current"' : '') . '>По убыванию цены</a></div>';
     $content .= '<div class="large-10 large-centered columns">' . $strZak;
-    while ($tvone = mysql_fetch_object($res)) {
+    while ($tvone = mysqli_fetch_object($res)) {
 
         if ($tov == 2 && $viewFlag == 1) {
 

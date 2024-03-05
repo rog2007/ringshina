@@ -1,5 +1,7 @@
 <?php
 
+require ("callAPI.php");
+require ("funcPodbor.php");
 function getBlock($key) {
     global $dbcon;
     $sel = $dbcon->prepare("SELECT html FROM html_blocks WHERE type_key = :type_key");
