@@ -38,12 +38,15 @@ try {
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());
 }
-//mysqli_connect(DB_HOST, DB_USER, DB_PASS);
-//mysqli_select_db(DB_NAME) or die("Unable to select database");
-//
-//mysqli_query("set character_set_client='utf8'");
-//mysqli_query("set character_set_results='utf8'");
-//mysqli_query("set collation_connection='utf8_general_ci'");
+
+if(!$isDevelop){
+    mysql_connect(DB_HOST, DB_USER, DB_PASS);
+    mysql_select_db(DB_NAME) or die("Unable to select database");
+
+    mysql_query("set character_set_client='utf8'");
+    mysql_query("set character_set_results='utf8'");
+    mysql_query("set collation_connection='utf8_general_ci'");
+}
 
 $mysqli = mysqli_connect(DB_HOST, DB_USER, DB_PASS);
 mysqli_select_db($mysqli, DB_NAME) or die("Unable to select database");
