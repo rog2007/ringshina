@@ -255,8 +255,8 @@
         if($resObj->tab1_id == 2){
 
           $url = $resObj->t3url . '_' . $resObj->t4url . '_' . str2url($resObj->tb5_nm) . '_' . str2url($resObj->tb6_nm) . '_' .
-            str2url($resObj->tb7_nm) . '_' . str2url($resObj->tb8_nm) . '_' . str2url($resObj->tb9_nm) . '_' .
-            str2url($resObj->tb12_nm) . '_' . str2url($resObj->tb2_nm);
+            str2url($resObj->tb7_nm) . '_' . str2url($resObj->tb8_nm) . '_' . $resObj->tb9_nm . '_' .
+            str2url($resObj->tb12_nm) . '_' . str2url($resObj->tb2_nm);            
         }
 
         if($resObj->tab1_id == 3){
@@ -335,7 +335,7 @@ function str2url($str) {
     // в нижний регистр
     $str = strtolower($str);
     // заменям все ненужное нам на "-"
-    $str = preg_replace('~[^-a-z0-9_]+~u', '-', $str);
+    $str = preg_replace('~[^\-a-z0-9_]+~u', '-', $str);
     // удаляем начальные и конечные '-'
     $str = trim($str, "-");
     return $str;
