@@ -102,6 +102,7 @@ function getIdByName($name, $table, $columnName, $columnId){
 
 function getData($vend = null, $model = null, $year = null, $modif = null){
     global $dbcon;
+    $value_if_not_contionue = 10;
     if($vend == null){
         $res = $dbcon->query("SELECT data FROM vendors")->fetchAll(PDO::FETCH_ASSOC);
         $data = [];
@@ -113,7 +114,7 @@ function getData($vend = null, $model = null, $year = null, $modif = null){
     }else if($model == null){
         $vendId = intval($dbcon->query("SELECT id FROM vendors WHERE slug = '" . $vend . "'")->fetch(PDO::FETCH_ASSOC)["id"]);
         $isNextLevelCompleted = $dbcon->query("SELECT completed FROM vendors WHERE slug = '" . $vend . "'")->fetch(PDO::FETCH_ASSOC);
-        if($isNextLevelCompleted["completed"] == 0){
+        if($isNextLevelCompleted["completed"] == $value_if_not_contionue){
             $res = callAPI("https://api.wheel-size.com/v2/models/?make=" . $vend . "&user_key=467886d78550ce67d42cd4591173155a");
             for($i = 0;$i < sizeof($res);$i++){
                 $query = $dbcon->prepare("INSERT INTO models (parentId, name, slug, data, completed) VALUES (:parentId, :name, :slug, :data, 0)");
@@ -137,7 +138,7 @@ function getData($vend = null, $model = null, $year = null, $modif = null){
         $vendId = intval($dbcon->query("SELECT id FROM vendors WHERE slug = '" . $vend . "'")->fetch(PDO::FETCH_ASSOC)["id"]);
         $modelId = intval($dbcon->query("SELECT id FROM models WHERE slug = '" . $model . "' AND parentId = '" . $vendId . "'")->fetch(PDO::FETCH_ASSOC)["id"]);
         $isNextLevelCompleted = $dbcon->query("SELECT completed FROM models WHERE slug = '" . $model . "' AND parentId='" . $vendId . "'")->fetch(PDO::FETCH_ASSOC);
-        if($isNextLevelCompleted["completed"] == 0){
+        if($isNextLevelCompleted["completed"] == $value_if_not_contionue){
             $res = callAPI("https://api.wheel-size.com/v2/years/?make=" . $vend . "&model=" . $model . "&user_key=467886d78550ce67d42cd4591173155a");
             for($i = 0;$i < sizeof($res);$i++){
                 $query = $dbcon->prepare("INSERT INTO years (parentId, name, slug, data, completed) VALUES (:parentId, :name, :slug, :data, 0)");
@@ -162,7 +163,7 @@ function getData($vend = null, $model = null, $year = null, $modif = null){
         $modelId = intval($dbcon->query("SELECT id FROM models WHERE slug = '" . $model . "' AND parentId = '" . $vendId . "'")->fetch(PDO::FETCH_ASSOC)["id"]);
         $yearId = intval($dbcon->query("SELECT id FROM years WHERE slug = '" . $year . "' AND parentId = '" . $modelId . "'")->fetch(PDO::FETCH_ASSOC)["id"]);
         $isNextLevelCompleted = $dbcon->query("SELECT completed FROM years WHERE slug = '" . $year . "' AND parentId='" . $modelId . "'")->fetch(PDO::FETCH_ASSOC);
-        if($isNextLevelCompleted["completed"] == 0){
+        if($isNextLevelCompleted["completed"] == $value_if_not_contionue){
             $res = callAPI("https://api.wheel-size.com/v2/modifications/?make=" . $vend . "&model=" . $model . "&year=" . $year . "&user_key=467886d78550ce67d42cd4591173155a");
             for($i = 0;$i < sizeof($res);$i++){
                 $query = $dbcon->prepare("INSERT INTO modifications (parentId, name, slug, data, completed) VALUES (:parentId, :name, :slug, :data, 0)");
@@ -188,7 +189,7 @@ function getData($vend = null, $model = null, $year = null, $modif = null){
         $yearId = intval($dbcon->query("SELECT id FROM years WHERE slug = '" . $year . "' AND parentId = '" . $modelId . "'")->fetch(PDO::FETCH_ASSOC)["id"]);
         $modifId = intval($dbcon->query("SELECT id FROM modifications WHERE slug = '" . $modif . "' AND parentId = '" . $yearId . "'")->fetch(PDO::FETCH_ASSOC)["id"]);
         $isNextLevelCompleted = $dbcon->query("SELECT completed FROM modifications WHERE slug = '" . $modif . "' AND parentId='" . $yearId . "'")->fetch(PDO::FETCH_ASSOC);
-        if($isNextLevelCompleted["completed"] == 0){
+        if($isNextLevelCompleted["completed"] == $value_if_not_contionue){
             $res = callAPI("https://api.wheel-size.com/v2/search/by_model/?make=" . $vend . "&model=" . $model . "&year=" . $year . "&modification=" . $modif . "&user_key=467886d78550ce67d42cd4591173155a");
             for($i = 0;$i < sizeof($res);$i++){
                 $query = $dbcon->prepare("INSERT INTO wheelsInfo (parentId, name, slug, data) VALUES (:parentId, :name, :slug, :data)");
