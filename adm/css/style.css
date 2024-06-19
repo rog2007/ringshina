@@ -108,6 +108,7 @@ h2{font-size:14px;font-weight:bold}
 #nomens table .pages td{height:20px;border:none;padding:5px;text-align:left}
 #nomens table .pages td span{margin:0 3px}
 #nomens table .pages td a{margin:0 3px}
+#nomens table td input{width: 98%;}
 #main .leftmenu{float:left;width:180px;border:1px solid #bbb;padding:10px}
 #main .leftmenu a{display:block;float:left;width:180px;height:20px;font:normal 14px arial;color:#0000FF;text-decoration:none}
 #main .rght{float:left}

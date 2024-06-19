@@ -7,7 +7,7 @@ if ($hostArr[0] == 'www') {
 } else {
     $domainIndex = 1;
 }
-if ($hostArr[$domainIndex] == 'dev') {
+if ($hostArr[$domainIndex] == 'dev' || $hostArr[$domainIndex] == 'loc') {
     $isDevelop = true;
 }
 
@@ -16,10 +16,10 @@ if ($isDevelop) {
 
     $imgLinkPrefix = 'https://www.ringshina.ru';
     define('DB_DRIVER', 'mysql');
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', 'mysql');
     define('DB_NAME', 'ringshina');
     define('DB_USER', 'root');
-    define('DB_PASS', '');
+    define('DB_PASS', 'secret');
     define('DB_PORT', '3306');
 } else {
 
