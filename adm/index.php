@@ -73,7 +73,7 @@ if ($page != "index") {
 <div id="head"><a href="/adm/lprices/">Загрузка прайсов</a> | <a href="/adm/spravochnic.html">Справочники</a> | <a
             href="/adm/orders.html">Заказы</a> | <a href="/adm/work_new/">Обработка не отработанных позиций</a> | <a
             href="/adm/work_akb/">Обработка не отработанных позиций (АКБ)</a> | <a href="/">На сайт</a> | <a
-            href="/adm/calculators/show/1/">Калькуляторы</a> | <a href="/adm/spravochnic_podbor/vendors/1">Побор авто</a> | <a href="/adm/exit.php">Выход</a></div>
+            href="/adm/calculators/show/1/">Калькуляторы</a> | <a href="/adm/spravochnic_podbor/vendors/1/">Побор авто</a> | <a href="/adm/exit.php">Выход</a></div>
 <div id="main">
     <?php
     if (md5(crypt($_SESSION['name'], $_SESSION['pass'])) != $_SESSION['SID']) {

@@ -3,7 +3,7 @@ require("func_podbor.php");
 $str .= '<table><tr><td style="width:140px;vertical-align:top">';
 include_once("lmenu.php");
 
-$str .= "<td style='margin-top:0px;'>";
+$str .= "<td style='vertical-align:top;margin-top:0px;'>";
 
 $str .= "<div style='margin-left:100px;'>
     <a href='/adm/spravochnic_podbor/vendors/1/'>Марки авто</a> | 

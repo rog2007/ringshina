@@ -322,7 +322,7 @@ function get_path($obj, $table){
         $path = get_path($obj, "modifications");
         $path[] = $obj;
         return $path;
-    }else if($table == "modifications"){
+    }else if($table == "modifications"){        
         $obj = $dbcon->query("SELECT * FROM years WHERE id=" . $obj["parentId"])->fetch(PDO::FETCH_ASSOC);
         $path = get_path($obj, "years");
         $path[] = $obj;
@@ -333,6 +333,8 @@ function get_path($obj, $table){
         $path[] = $obj;
         return $path;
     }else if($table == "models"){
+        //var_dump($obj);
+        //var_dump($obj["parentId"]);
         $obj = $dbcon->query("SELECT * FROM vendors WHERE id=" . $obj["parentId"])->fetch(PDO::FETCH_ASSOC);
         $path[] = $obj;
         return $path;

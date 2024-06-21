@@ -13,7 +13,7 @@ $str .= "<div id='nomens'><table id='nomen'>";
 
 $str .= get_head($arg[0]);
 
-$str .= "<form action='/adm/spravochnic_podbor/" . $arg[0] . "/1' method='POST' name='filters'>";
+$str .= "<form action='/adm/spravochnic_podbor/" . $arg[0] . "/1/' method='POST' name='filters'>";
 
 $str .= get_filters($arg[0]);
 
