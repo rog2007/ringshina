@@ -116,35 +116,81 @@ function get_head($arg){
     }
 }
 
-function get_rows_list($arg){
+function get_rows_list($table, $name, $vendor, $model, $year){
     global $dbcon;
-    $res = $dbcon->query("SELECT * FROM " . $arg)->fetchAll(PDO::FETCH_ASSOC);
+    $tables = ["vendors", "models", "years", "modifications"];
+    $col = ["id", "name", "slug"];
+    $query = "SELECT ";
+    $joins = "";
+    for($i = 0;$i < sizeof($tables);$i++){
+        for($j = 0;$j < sizeof($col);$j++){
+            if($i != 0 || $j != 0){
+                $query .= ", ";
+            }
+            $query .= $tables[$i] . "." . $col[$j] . " " . substr($tables[$i], 0, 4) . $col[$j];
+        }
+
+        if($table == $tables[$i]){
+            break;
+        }
+
+        $joins = "JOIN " . $tables[$i] . " ON " . $tables[$i] . ".id=" . $tables[$i + 1] . ".parentId " . $joins;
+    }
+
+    $query .= " FROM " . $table . " " . $joins;
+
+    $cond = [];
+
+    if($name && $name != "all"){
+        $cond[] = "(" . $table . ".name LIKE '%". $name . "%' OR " . $table . ".slug LIKE '%" . $name . "%')";
+    }
+    if($vendor && $vendor != "all"){
+        $cond[] = "vendors.id=" . $vendor;
+    }
+    if($model && $model != "all"){
+        $cond[] = "models.id=" . $model;
+    }
+    if($year && $year != "all"){
+        $cond[] = "years.id=" . $year;
+    }
+
+    if(sizeof($cond) != 0){
+        $query .= " WHERE";
+    }
+
+    for($i = 0;$i < sizeof($cond);$i++){
+        if($i != 0){
+            $query .= " AND";
+        }
+        $query .= " " . $cond[$i];
+    }
+
+    $res = $dbcon->query($query)->fetchAll(PDO::FETCH_ASSOC);
     return $res;
 }
 
 function get_row($arg, $data){
     global $dbcon;
     if($arg == "vendors"){
-        return "<tr class='skld'><form action='/adm/podbor_save/vendors/" . $data["id"] . "/' method='post'>
+        return "<tr class='skld'><form action='/adm/podbor_save/vendors/" . $data[substr($arg, 0, 4) . "id"] . "/' method='post'>
                     <input type='hidden' value='update' name='mode'>
-                    <td name='id' class='identificator'>" . $data["id"] . "</td>
-                    <td class='nm'><input type='text' name='name' value='" . $data["name"] . "'></td>
-                    <td class='nm'><input type='text' name='slug' value='" . $data["slug"] . "'></td>
+                    <td name='id' class='identificator'>" . $data[substr($arg, 0, 4) . "id"] . "</td>
+                    <td class='nm'><input type='text' name='name' value='" . $data[substr($arg, 0, 4) . "name"] . "'></td>
+                    <td class='nm'><input type='text' name='slug' value='" . $data[substr($arg, 0, 4) . "slug"] . "'></td>
                     <td><button type='submit'>Сохранить</button></td></form>
                     <td style='width:30px'>
-                        <button onclick='delete_for_id(" . '"vendors"' . ", " . $data["id"] . ")'>Удалить</button>
+                        <button onclick='delete_for_id(" . '"vendors"' . ", " . $data[substr($arg, 0, 4) . "id"] . ")'>Удалить</button>
                     </td>
                 </tr>";
     }else if($arg == "models"){
-        $parent = $dbcon->query("SELECT name FROM vendors WHERE id=" . $data["parentId"])->fetch(PDO::FETCH_ASSOC)["name"];
         $vendors = $dbcon->query("SELECT name, id FROM vendors")->fetchAll(PDO::FETCH_ASSOC);
-        $ans = "<tr class='skld'><form action='/adm/podbor_save/models/" . $data["id"] . "/' method='post'>
+        $ans = "<tr class='skld'><form action='/adm/podbor_save/models/" . $data[substr($arg, 0, 4) . "id"] . "/' method='post'>
                     <input type='hidden' value='update' name='mode'>
-                    <td name='id' class='identificator'>" . $data["id"] . "</td>
+                    <td name='id' class='identificator'>" . $data[substr($arg, 0, 4) . "id"] . "</td>
                     <td class='nm'><select name='parent'>";
 
         for($i = 0;$i < sizeof($vendors);$i++){
-            if($vendors[$i]["name"] == $parent){
+            if($vendors[$i]["id"] == $data["vendid"]){
                 $ans .= "<option selected value='" . $vendors[$i]["id"] . "'>" . $vendors[$i]["name"] . "</option>";
             }else{
                 $ans .= "<option value='" . $vendors[$i]["id"] . "'>" . $vendors[$i]["name"] . "</option>";
@@ -152,26 +198,24 @@ function get_row($arg, $data){
         }
 
         $ans .= "</select></td>
-                    <td class='nm'><input type='text' name='name' value='" . $data["name"] . "'></td>
-                    <td class='nm'><input type='text' name='slug' value='" . $data["slug"] . "'></td>
+                    <td class='nm'><input type='text' name='name' value='" . $data[substr($arg, 0, 4) . "name"] . "'></td>
+                    <td class='nm'><input type='text' name='slug' value='" . $data[substr($arg, 0, 4) . "slug"] . "'></td>
                     <td><button type='submit'>Сохранить</button></td></form>
                     <td style='width:30px'>
-                        <button onclick='delete_for_id(" . '"models"' . ", " . $data["id"] . ")'>Удалить</button>
+                        <button onclick='delete_for_id(" . '"models"' . ", " . $data[substr($arg, 0, 4) . "id"] . ")'>Удалить</button>
                     </td>
                 </tr>";
         return $ans;
     }else if($arg == "years"){
-        $model = $dbcon->query("SELECT name, parentId FROM models WHERE id=" . $data["parentId"])->fetch(PDO::FETCH_ASSOC);
-        $models = $dbcon->query("SELECT name, id FROM models WHERE parentId=" . $model["parentId"])->fetchAll(PDO::FETCH_ASSOC);
-        $vendor = $dbcon->query("SELECT name FROM vendors WHERE id=" . $model["parentId"])->fetch(PDO::FETCH_ASSOC);
-        $ans = "<tr class='skld'><form action='/adm/podbor_save/years/" . $data["id"] . "/' method='post'>
+        $models = $dbcon->query("SELECT name, id FROM models WHERE parentId=" . $data["vendid"])->fetchAll(PDO::FETCH_ASSOC);
+        $ans = "<tr class='skld'><form action='/adm/podbor_save/years/" . $data[substr($arg, 0, 4) . "id"] . "/' method='post'>
                     <input type='hidden' value='update' name='mode'>
-                    <td name='id' class='identificator'>" . $data["id"] . "</td>
-                    <td class='nm'>" . $vendor["name"] . "</td>
+                    <td name='id' class='identificator'>" . $data[substr($arg, 0, 4) . "id"] . "</td>
+                    <td class='nm'>" . $data[substr($arg, 0, 4) . "name"] . "</td>
                     <td class='nm'><select name='model'>";
 
         for($i = 0;$i < sizeof($models);$i++){
-            if($model["name"] == $models[$i]["name"]){
+            if($data["modeid"] == $models[$i]["id"]){
                 $ans .= "<option selected value='" . $models[$i]["id"] . "'>" . $models[$i]["name"] . "</option>";
             }else{
                 $ans .= "<option value='" . $models[$i]["id"] . "'>" . $models[$i]["name"] . "</option>";
@@ -179,28 +223,25 @@ function get_row($arg, $data){
         }
         
         $ans .= "</select></td>
-                    <td><input type='text' name='name' value='" . $data["name"] . "'></td>
-                    <td><input type='text' name='slug' value='" . $data["slug"] . "'></td>
+                    <td><input type='text' name='name' value='" . $data[substr($arg, 0, 4) . "name"] . "'></td>
+                    <td><input type='text' name='slug' value='" . $data[substr($arg, 0, 4) . "slug"] . "'></td>
                     <td><button type='submit'>Сохранить</button></td></form>
                     <td style='width:30px'>
-                        <button onclick='delete_for_id(" . '"years"' . ", " . $data["id"] . ")'>Удалить</button>
+                        <button onclick='delete_for_id(" . '"years"' . ", " . $data[substr($arg, 0, 4) . "id"] . ")'>Удалить</button>
                     </td>
                 </tr>";
         return $ans;
     }else if($arg == "modifications"){
-        $year = $dbcon->query("SELECT name, parentId FROM years WHERE id=" . $data["parentId"])->fetch(PDO::FETCH_ASSOC);
-        $model = $dbcon->query("SELECT name, parentId FROM models WHERE id=" . $year["parentId"])->fetch(PDO::FETCH_ASSOC);
-        $years = $dbcon->query("SELECT name, id FROM years WHERE parentId=" . $year["parentId"])->fetchAll(PDO::FETCH_ASSOC);
-        $vendor = $dbcon->query("SELECT name FROM vendors WHERE id=" . $model["parentId"])->fetch(PDO::FETCH_ASSOC);
-        $ans = "<tr class='skld'><form action='/adm/podbor_save/modifications/" . $data["id"] . "/' method='post'>
+        $years = $dbcon->query("SELECT name, id FROM years WHERE parentId=" . $data["modeid"])->fetchAll(PDO::FETCH_ASSOC);
+        $ans = "<tr class='skld'><form action='/adm/podbor_save/modifications/" . $data[substr($arg, 0, 4) . "id"] . "/' method='post'>
                     <input type='hidden' value='update' name='mode' />
-                    <td name='id' class='identificator'>" . $data["id"] . "</td>
-                    <td class='nm'>" . $vendor["name"] . "</td>
-                    <td>" . $model["name"] . "</td>
+                    <td name='id' class='identificator'>" . $data[substr($arg, 0, 4) . "id"] . "</td>
+                    <td class='nm'>" . $data["vendname"] . "</td>
+                    <td>" . $data["modename"] . "</td>
                     <td class='nm'><select name='year'>";
 
         for($i = 0;$i < sizeof($years);$i++){
-            if($year["name"] == $years[$i]["name"]){
+            if($data["yearname"] == $years[$i]["name"]){
                 $ans .= "<option selected value='" . $years[$i]["id"] . "'>" . $years[$i]["name"] . "</option>";
             }else{
                 $ans .= "<option value='" . $years[$i]["id"] . "'>" . $years[$i]["name"] . "</option>";
@@ -208,13 +249,13 @@ function get_row($arg, $data){
         }
         
         $ans .= "</select></td>
-                    <td><input type='text' name='name' value='" . $data["name"] . "'></td>
-                    <td><input type='text' name='slug' value='" . $data["slug"] . "'></td>
+                    <td><input type='text' name='name' value='" . $data[substr($arg, 0, 4) . "name"] . "'></td>
+                    <td><input type='text' name='slug' value='" . $data[substr($arg, 0, 4) . "slug"] . "'></td>
                     <td><button type='submit'>Сохранить</button></td></form>
                     <td style='width:30px'>
-                        <button onclick='delete_for_id(" . '"modifications"' . ", " . $data["id"] . ")'>Удалить</button>
+                        <button onclick='delete_for_id(" . '"modifications"' . ", " . $data[substr($arg, 0, 4) . "id"] . ")'>Удалить</button>
                     </td>
-                    <td><a href='/adm/edit_wheelsInfo/" . $data["id"] . "/'>изменить</a></td>
+                    <td><a href='/adm/edit_wheelsInfo/" . $data[substr($arg, 0, 4) . "id"] . "/'>изменить</a></td>
                 </tr>";
         return $ans;
     }
@@ -234,13 +275,14 @@ function get_step($arg){
 }
 
 function get_filters($arg){
+    global $dbcon;
     $st = get_step($arg);
     $ans = "";
     if($st >= 1){
         $ans .= "<select id='filter_vend' name='vend' onchange='filter_add(1)'>
                     <option value='all'>все</option>";
         
-        $vendors = get_rows_list("vendors");
+        $vendors = $dbcon->query("SELECT id, name FROM vendors")->fetchAll(PDO::FETCH_ASSOC);
 
         for($i = 0;$i < sizeof($vendors);$i++){
             $ans .= "<option value='" . $vendors[$i]["id"] . "'>" . $vendors[$i]["name"] . "</option>";
@@ -261,53 +303,53 @@ function get_filters($arg){
     return $ans;
 }
 
-function PagesCreate($all_cn, $crpg, $class)
+function PagesCreate($all_cn, $crpg, $class, $filters)
 {
     $strtmp = '';
     if ($all_cn < 8) {
         for ($i = 1; $i <= $all_cn; $i++) {
-            $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/' . $i . '/">' . $i .
+            $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/page/' . $i . '/' . $filters . '">' . $i .
                 '</a>' : '<span>' . $i . '</span>');
         }
     }
     if ($all_cn >= 8) {
         if ($crpg < 4) {
             for ($i = 1; $i <= 5; $i++) {
-                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/' . $i . '/">' . $i .
+                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/page/' . $i . '/' . $filters . '">' . $i .
                     '</a>' : '<span>' . $i . '</span>');
             }
-            $strtmp .= '<a href="">&hellip;</a><a href="/adm/spravochnic_podbor/' . $class . '/' . $all_cn . '/">' .
+            $strtmp .= '<a href="">&hellip;</a><a href="/adm/spravochnic_podbor/' . $class . '/page/' . $all_cn . '/' . $filters . '">' .
                 $all_cn . '</a>';
         }
         if ($crpg == 4) {
             for ($i = 1; $i <= 6; $i++) {
-                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/' . $i . '/">' . $i .
+                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/page/' . $i . '/' . $filters . '">' . $i .
                     '</a>' : '<span>' . $i . '</span>');
             }
-            $strtmp .= '<a href="">&hellip;</a><a href="/adm/spravochnic_podbor/' . $class . '/' . $all_cn . '/">' .
+            $strtmp .= '<a href="">&hellip;</a><a href="/adm/spravochnic_podbor/' . $class . '/page/' . $all_cn . '/' . $filters . '">' .
                 $all_cn . '</a>';
         }
         if ($crpg > $all_cn - 3) {
-            $strtmp .= '<a href="/adm/spravochnic_podbor/' . $class . '/1/">1</a><a href="">&hellip;</a>';
+            $strtmp .= '<a href="/adm/spravochnic_podbor/' . $class . '/page/1/' . $filters . '">1</a><a href="">&hellip;</a>';
             for ($i = $all_cn - 4; $i <= $all_cn; $i++) {
-                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/' . $i . '/">' . $i .
+                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/page/' . $i . '/' . $filters . '">' . $i .
                     '</a>' : '<span>' . $i . '</span>');
             }
         }
         if ($crpg == $all_cn - 3) {
-            $strtmp .= '<a href="/adm/spravochnic_podbor/' . $class . '/1/">1</a><a href="">&hellip;</a>';
+            $strtmp .= '<a href="/adm/spravochnic_podbor/' . $class . '/page/1/' . $filters . '">1</a><a href="">&hellip;</a>';
             for ($i = $all_cn - 5; $i <= $all_cn; $i++) {
-                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/' . $i . '/">' . $i .
+                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/page/' . $i . '/' . $filters . '">' . $i .
                     '</a>' : '<span>' . $i . '</span>');
             }
         }
         if ($crpg < $all_cn - 3 && $crpg > 4) {
-            $strtmp .= '<a href="/adm/spravochnic_podbor/' . $class . '/1/">1</a><a href="">&hellip;</a>';
+            $strtmp .= '<a href="/adm/spravochnic_podbor/' . $class . '/page/1/' . $filters . '">1</a><a href="">&hellip;</a>';
             for ($i = $crpg - 2; $i <= $crpg + 2; $i++) {
-                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/' . $i . '/">' . $i .
+                $strtmp .= ($i != $crpg ? '<a href="/adm/spravochnic_podbor/' . $class . '/page/' . $i . '/' . $filters . '">' . $i .
                     '</a>' : '<span>' . $i . '</span>');
             }
-            $strtmp .= '<a href="">&hellip;</a><a href="/adm/spravochnic_podbor/' . $class . '/' . $all_cn . '/">' .
+            $strtmp .= '<a href="">&hellip;</a><a href="/adm/spravochnic_podbor/' . $class . '/page/' . $all_cn . '/' . $filters . '">' .
                 $all_cn . '</a>';
         }
     }
@@ -451,5 +493,13 @@ function from_string($value){
         return false;
     }
     return $value;
+}
+
+function parse_args($begin, $args){
+    $parsed_args = array();
+    for($i = $begin;$i < sizeof($args);$i += 2){
+        $parsed_args[$args[$i]] = $args[$i + 1];
+    }
+    return $parsed_args;
 }
 ?>
