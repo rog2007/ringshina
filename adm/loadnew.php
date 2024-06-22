@@ -130,7 +130,7 @@ if (isset($_POST['load_pnew']) || (isset($arg[0]) && $arg[0])) {
         if ($rs->tyres || $rs->wheels) {
 
             $rec_area = sql2arr2('select om,alr from omolog where omvis=1');
-            $sql1 = 'SELECT trim(id_tov_sup) as id FROM total_suppl WHERE id_sup=' . $supplierid;
+            $sql1 = 'SELECT LOWER(trim(id_tov_sup)) as id FROM total_suppl WHERE id_sup=' . $supplierid;
             $idsuppl = sql2arr2($sql1);
             mysql_query('delete from power;');
             mysql_query('alter TABLE power AUTO_INCREMENT=1;');
@@ -194,8 +194,6 @@ if (isset($_POST['load_pnew']) || (isset($arg[0]) && $arg[0])) {
                     $artar = WorkThisArt($rs->cart);
 // работа с наименованием
                     $cname = eval('return "' . $rs->cname . '";');
-                    //       echo $cname;
-                    //echo "<br/>";
                     if (empty($cname)) {
                         continue;
                     }
