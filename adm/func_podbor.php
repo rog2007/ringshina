@@ -141,17 +141,47 @@ function get_rows_list($table, $name, $vendor, $model, $year){
 
     $cond = [];
 
+    $order = "vendname";
+
     if($name && $name != "all"){
         $cond[] = "(" . $table . ".name LIKE '%". $name . "%' OR " . $table . ".slug LIKE '%" . $name . "%')";
     }
     if($vendor && $vendor != "all"){
         $cond[] = "vendors.id=" . $vendor;
+        if($order != ""){
+            $order .= ", ";
+        }
+        $order .= "modename";
+    }else{
+        if($order != ""){
+            $order .= ", ";
+        }
+        $order .= "vendslug";
     }
     if($model && $model != "all"){
         $cond[] = "models.id=" . $model;
+        if($order != ""){
+            $order .= ", ";
+        }
+        $order .= "yearname";
+    }else{
+        if($order != ""){
+            $order .= ", ";
+        }
+        $order .= "modeslug";
     }
     if($year && $year != "all"){
         $cond[] = "years.id=" . $year;
+        if($order != ""){
+            $order .= ", ";
+        }
+        $order .= "modiname";
+        $order .= "modislug";
+    }else{
+        if($order != ""){
+            $order .= ", ";
+        }
+        $order .= "yearslug";
     }
 
     if(sizeof($cond) != 0){
@@ -163,6 +193,10 @@ function get_rows_list($table, $name, $vendor, $model, $year){
             $query .= " AND";
         }
         $query .= " " . $cond[$i];
+    }
+
+    if($order != ""){
+        $query .= " ORDER BY " . $order;
     }
 
     $res = $dbcon->query($query)->fetchAll(PDO::FETCH_ASSOC);
