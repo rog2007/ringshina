@@ -70,7 +70,9 @@ function fill_data($vend = 0, $model = 0, $year = 0, $modif = 0){
         }
         $res = $dbcon->query("SELECT slug FROM years WHERE parentId = '" . $modelId . "'")->fetchAll(PDO::FETCH_ASSOC);
         for($i = 0;$i < sizeof($res);$i++){
-            fill_data($vend, $model, $res[$i]["slug"]);
+            if($res[$i]["slug"] >= 2015){
+                fill_data($vend, $model, $res[$i]["slug"]);
+            }
         }
     }else if(!$modif){
         $vendId = intval($dbcon->query("SELECT id FROM vendors WHERE slug = '" . $vend . "'")->fetch(PDO::FETCH_ASSOC)["id"]);

@@ -25,14 +25,14 @@ for($i = 0;$i < sizeof($path);$i++){
 
 $str .= "<form action='/adm/podbor_save/wheelsInfo/" . $info["id"] . "/' method='post'>";
 
-$str .= "<table>";
+$str .= "<table style='width:auto;'>";
 
 $keys = ["technical-wheel_fasteners-type", "technical-wheel_fasteners-thread_size", "technical-stud_holes", "technical-pcd", "technical-centre_bore"];
 $names = ["Болты или гайки", "Размер", "Количество", "PCD", "Ступица"];
 
 $str .= "<tr>";
 for($i = 0;$i < sizeof($names);$i++){
-    $str .= "<td><p>" . $names[$i] . "</p></td>";
+    $str .= "<td><p style='margin-right:2px;'>" . $names[$i] . "</p></td>";
 }
 $str .= "</tr>";
 
@@ -72,11 +72,11 @@ $names = ["Стоковые колёса", "Одинаковые оси", "Ди�
                                                 "Диаметр задних дисков", "Ширина заднего диска", "Вылет заднего", "Ширина профиля сзади", "Высота профиля сзади"];
 
 $str .= "<div id='wheels'>";
-$str .= "<table>";
+$str .= "<table style='width:auto;'>";
 
 $str .= "<tr>";
 for($i = 0;$i < sizeof($names);$i++){
-    $str .= "<td>" . $names[$i] . "</td>";
+    $str .= "<td><p style='margin-right:2px;'>" . $names[$i] . "</p></td>";
 }
 $str .= "</tr>";
 
@@ -86,7 +86,7 @@ for($i = 0;$i < sizeof($data["wheels"]);$i++){
     for($j = 0;$j < sizeof($keys);$j++){
         if($keys[$j] == "is_stock" || $keys[$j] == "showing_fp_only"){
             $value = get_value($data["wheels"][$i], explode("-", $keys[$j]), 0);
-            $str .= "<td><select name='" . $keys[$j] . "'>";
+            $str .= "<td style='width:10px;'><select name='" . $keys[$j] . "'>";
             if($value == "true"){
                 $str .= "<option value='true' selected>да</option>";
                 $str .= "<option value='false'>нет</option>";
@@ -102,7 +102,7 @@ for($i = 0;$i < sizeof($data["wheels"]);$i++){
             continue;
         }
         $value = get_value($data["wheels"][$i], explode("-", $keys[$j]), 0);
-        $str .= "<td><input style='width:130px;' name='" . $keys[$j] . $i . "' value='" . to_string($value) . "'></td>";
+        $str .= "<td style='width:10px;'><input style='width:130px;' name='" . $keys[$j] . $i . "' value='" . to_string($value) . "'></td>";
     }
     $str .= "<td><button type='button' onclick='del_elem_for_id(" . '"wheel' . $i . '"' . ")'>удалить</button></td></div>";
     $str .= "</tr>";
