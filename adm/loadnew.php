@@ -129,8 +129,8 @@ if (isset($_POST['load_pnew']) || (isset($arg[0]) && $arg[0])) {
         $key = 0;
         if ($rs->tyres || $rs->wheels) {
 
-            $rec_area = sql2arr2('select om,alr from omolog where omvis=1');
-            $sql1 = 'SELECT trim(id_tov_sup) as id FROM total_suppl WHERE id_sup=' . $supplierid;
+            $rec_area = sql2arr2('select om,alr from omolog where omvis=1');            
+            $sql1 = 'SELECT LOWER(trim(id_tov_sup)) as id FROM total_suppl WHERE id_sup=' . $supplierid;
             $idsuppl = sql2arr2($sql1);
             mysql_query('delete from power;');
             mysql_query('alter TABLE power AUTO_INCREMENT=1;');
@@ -207,13 +207,10 @@ if (isset($_POST['load_pnew']) || (isset($arg[0]) && $arg[0])) {
                         $art = $artar[1];
                     }
                     $art = trim($art);
-                    if ($art == "-1" || $art == "0" || $art == "" || !in_array($art, $idsuppl)) {
-
+                    if ($art == "-1" || $art == "0" || $art == "" || !in_array(ruslow(strtolower($art)), $idsuppl)) {
                         if ($rs->tyres || $rs->wheels) {
-
                             parse_data();
                         } else {
-
                             parseAKB();
                         }
                     } else {
