@@ -6,10 +6,10 @@ include_once("lmenu.php");
 $str .= "<td style='vertical-align:top;margin-top:0px;'>";
 
 $str .= "<div style='margin-left:100px;'>
-    <a href='/adm/spravochnic_podbor/vendors/1/'>Марки авто</a> | 
-    <a href='/adm/spravochnic_podbor/models/1/'>Модели авто</a> | 
-    <a href='/adm/spravochnic_podbor/years/1/'>Год выпуска авто</a> | 
-    <a href='/adm/spravochnic_podbor/modifications/1/'>Модификация авто</a></div>";
+    <a href='/adm/spravochnic_podbor/vendors/page/1/'>Марки авто</a> | 
+    <a href='/adm/spravochnic_podbor/models/page/1/'>Модели авто</a> | 
+    <a href='/adm/spravochnic_podbor/years/page/1/'>Год выпуска авто</a> | 
+    <a href='/adm/spravochnic_podbor/modifications/page/1/'>Модификация авто</a></div>";
 
 $info = get_wheelsInfo($arg[0]);
 $path = get_path($info, "wheelsInfo");
@@ -72,7 +72,7 @@ $names = ["Стоковые колёса", "Одинаковые оси", "Ди�
                                                 "Диаметр задних дисков", "Ширина заднего диска", "Вылет заднего", "Ширина профиля сзади", "Высота профиля сзади"];
 
 $str .= "<div id='wheels'>";
-$str .= "<table style='width:auto;'>";
+$str .= "<table style='width:auto;' id='wheels_table'>";
 
 $str .= "<tr>";
 for($i = 0;$i < sizeof($names);$i++){
@@ -81,12 +81,11 @@ for($i = 0;$i < sizeof($names);$i++){
 $str .= "</tr>";
 
 for($i = 0;$i < sizeof($data["wheels"]);$i++){
-    $str .= "<tr>";
-    $str .= "<div id='wheel" . $i . "'>";
+    $str .= "<tr id='wheel" . $i . "'>";
     for($j = 0;$j < sizeof($keys);$j++){
         if($keys[$j] == "is_stock" || $keys[$j] == "showing_fp_only"){
             $value = get_value($data["wheels"][$i], explode("-", $keys[$j]), 0);
-            $str .= "<td style='width:10px;'><select name='" . $keys[$j] . "'>";
+            $str .= "<td style='width:10px;'><select name='" . $keys[$j] . $i . "'>";
             if($value == "true"){
                 $str .= "<option value='true' selected>да</option>";
                 $str .= "<option value='false'>нет</option>";

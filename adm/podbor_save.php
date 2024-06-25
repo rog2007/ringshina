@@ -128,7 +128,7 @@ function update_wheels_info_data($data){
                                     "rim_diameter" => "",
                                     "rim_width" => "",
                                     "rim_offset" => "",
-                                    "tire_construction" => "",
+                                    "tire_construction" => "R",
                                     "tire_width" => "",
                                     "tire_aspect_ratio" => ""
                                     ],
@@ -136,7 +136,7 @@ function update_wheels_info_data($data){
                                     "rim_diameter" => "",
                                     "rim_width" => "",
                                     "rim_offset" => "",
-                                    "tire_construction" => "",
+                                    "tire_construction" => "R",
                                     "tire_width" => "",
                                     "tire_aspect_ratio" => ""
                                     ]

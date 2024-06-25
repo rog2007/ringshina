@@ -518,7 +518,6 @@ function add_options_ajax(st, frm){
     );
 
     xmlhr.onload = function(){
-        console.log(xmlhr.response);
         let data = JSON.parse(xmlhr.response);
         frm.innerHTML = '';
         let ch = document.createElement("option");
@@ -636,7 +635,6 @@ function send_update(id, data){
 function edit_submit(){
     let id = document.getElementById("id_for_edit").value;
     let data = JSON.parse(JSON.parse(document.getElementById("data").value)[4]["data"]);
-    console.log(data);
 
     let info_keys = ["technical.wheel_fasteners.type", "technical.wheel_fasteners.thread_size", "technical.stud_holes", "technical.pcd", "technical.centre_bore"];
 
@@ -652,8 +650,6 @@ function edit_submit(){
         values.push(document.getElementsByClassName(wheels[i]));
     }
 
-    console.log(data);
-
     for(let i = 0;i < info_keys.length;i++){
         let path = info_keys[i].split(".");
         if(path.length == 1){
@@ -664,8 +660,6 @@ function edit_submit(){
             data[path[0]][path[1]][path[2]] = format_data(info_values[i][0].value);
         }
     }
-
-    console.log(data);
 
     for(let i = 0;i < wheels.length;i++){
         for(let j = 0;j < values[i].length;j++){
@@ -679,8 +673,6 @@ function edit_submit(){
             }
         }
     }
-
-    console.log(JSON.stringify(data));
 
     send_update(id, JSON.stringify(data));
 }
@@ -698,7 +690,6 @@ function edit_info(id){
 
     xmlhr.onload = function(){
         let data = JSON.parse(xmlhr.response);
-        console.log(xmlhr.response);
         wheelsInfo = JSON.parse(data[4]["data"]);
         let hidden = document.createElement("input");
         hidden.value = id;
@@ -757,33 +748,31 @@ function edit_info(id){
 }
 
 function add_wheels_config(){
-    let container = document.getElementById("wheels");
+    let wheels = document.getElementById("wheels_table").getElementsByTagName("tbody")[0];
+    let tr = document.createElement("tr");
     let cnt = document.getElementById("count");
-    let wheels = ["is_stock", "showing_fp_only", "front-rim_diameter", "front-rim_width", "front-rim_offset", "front-tire_construction", "front-tire_width", "front-tire_aspect_ratio",
-    "rear-rim_diameter", "rear-rim_width", "rear-rim_offset", "rear-tire_construction", "rear-tire_width", "rear-tire_aspect_ratio"];
-    for(let i = 0;i < wheels.length;i++){
-        let input = document.createElement("input");
-        input.name = wheels[i] +  Number(cnt.value);
-        container.appendChild(input);
-    }
+    tr.id = "wheel" + cnt.value;
+    tr.innerHTML = '<td style="width:10px;"><select name="is_stock' + cnt.value + '"><option value="true">да</option><option value="false" selected="">нет</option></select></td><td style="width:10px;"><select name="showing_fp_only' + cnt.value + '"><option value="true">да</option><option value="false" selected="">нет</option></select></td><td style="width:10px;"><input style="width:130px;" name="front-rim_diameter' + cnt.value + '" value=""></td><td style="width:10px;"><input style="width:130px;" name="front-rim_width' + cnt.value + '" value=""></td><td style="width:10px;"><input style="width:130px;" name="front-rim_offset' + cnt.value + '" value=""></td><input type="hidden" style="width:130px;" name="front-tire_construction' + cnt.value + '" value="R"><td style="width:10px;"><input style="width:130px;" name="front-tire_width' + cnt.value + '" value=""></td><td style="width:10px;"><input style="width:130px;" name="front-tire_aspect_ratio' + cnt.value + '" value=""></td><td style="width:10px;"><input style="width:130px;" name="rear-rim_diameter' + cnt.value + '" value=""></td><td style="width:10px;"><input style="width:130px;" name="rear-rim_width' + cnt.value + '" value=""></td><td style="width:10px;"><input style="width:130px;" name="rear-rim_offset' + cnt.value + '" value=""></td><input type="hidden" style="width:130px;" name="rear-tire_construction' + cnt.value + '" value="R"><td style="width:10px;"><input style="width:130px;" name="rear-tire_width' + cnt.value + '" value=""></td><td style="width:10px;"><input style="width:130px;" name="rear-tire_aspect_ratio' + cnt.value + '" value=""></td><td><button type="button" onclick="del_elem_for_id(&quot;wheel' + cnt.value + '&quot;)">удалить</button></td>';
+    wheels.appendChild(tr);
 
     cnt.value = Number(cnt.value) + 1;
 }
 
 function update_wheels_names(){
-    let wheels = document.getElementById("wheels");
-    let children = wheels.children;
-    let cnt = 0;
-    for(let i = 0;i < children.length;i++){
-        if(children[i].tagName != "DIV"){
-            continue;
-        }
+    let wheels = document.getElementById("wheels_table");
+    let children = wheels.children[0].children;
+    for(let i = 1;i < children.length;i++){
+        children[i].id = "wheel" + (i - 1);
+        children[i].children[children[i].children.length - 1].children[0].setAttribute("onclick", "del_elem_for_id('wheel" + (i - 1) + "')");
         let keys = ["is_stock", "showing_fp_only", "front-rim_diameter", "front-rim_width", "front-rim_offset", "front-tire_construction", "front-tire_width", "front-tire_aspect_ratio",
         "rear-rim_diameter", "rear-rim_width", "rear-rim_offset", "rear-tire_construction", "rear-tire_width", "rear-tire_aspect_ratio"];
         for(let j = 0;j < keys.length;j++){
-            children[i].children[j].name = keys[j] + cnt;
+            if(children[i].children[j].tagName == "TD"){
+                children[i].children[j].children[0].name = keys[j] + (i - 1);
+            }else{
+                children[i].children[j].name = keys[j] + (i - 1);
+            }
         }
-        cnt++;
     }
 }
 

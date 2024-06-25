@@ -31,7 +31,7 @@ function get_head($arg){
                     <td style='padding:10px;'> - </td>
                     <td style='padding:10px;' class='nm'><select name='parent'>";
 
-        $vendors = $dbcon->query("SELECT name, id FROM vendors")->fetchAll(PDO::FETCH_ASSOC);
+        $vendors = $dbcon->query("SELECT name, id FROM vendors ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
         for($i = 0;$i < sizeof($vendors);$i++){
             $ans .= "<option value='" . $vendors[$i]["id"] . "'>" . $vendors[$i]["name"] . "</option>";
         }
@@ -58,7 +58,7 @@ function get_head($arg){
                     <td style='padding:10px;' class='nm'><select name='vend' onchange='return admin_add_ajax(1)'>";
                     
         $ans .= "<option value='0'>все</option>";
-        $vendors = $dbcon->query("SELECT name, id FROM vendors")->fetchAll(PDO::FETCH_ASSOC);
+        $vendors = $dbcon->query("SELECT name, id FROM vendors ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
         for($i = 0;$i < sizeof($vendors);$i++){
             $ans .= "<option value='" . $vendors[$i]["id"] . "'>" . $vendors[$i]["name"] . "</option>";
         }
@@ -88,7 +88,7 @@ function get_head($arg){
                     <td style='padding:10px;' class='nm'><select name='vend' onchange='admin_add_ajax(1)'>";
                 
         $ans .= "<option value='0'>все</option>";
-        $vendors = $dbcon->query("SELECT name, id FROM vendors")->fetchAll(PDO::FETCH_ASSOC);
+        $vendors = $dbcon->query("SELECT name, id FROM vendors ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
         for($i = 0;$i < sizeof($vendors);$i++){
             $ans .= "<option value='" . $vendors[$i]["id"] . "'>" . $vendors[$i]["name"] . "</option>";
         }
@@ -152,36 +152,36 @@ function get_rows_list($table, $name, $vendor, $model, $year){
             $order .= ", ";
         }
         $order .= "modename";
+        if($model && $model != "all"){
+            $cond[] = "models.id=" . $model;
+            if($order != ""){
+                $order .= ", ";
+            }
+            $order .= "yearname";
+            if($year && $year != "all"){
+                $cond[] = "years.id=" . $year;
+                if($order != ""){
+                    $order .= ", ";
+                }
+                $order .= "modiname";
+                $order .= "modislug";
+            }else{
+                if($order != ""){
+                    $order .= ", ";
+                }
+                $order .= "yearslug";
+            }
+        }else{
+            if($order != ""){
+                $order .= ", ";
+            }
+            $order .= "modeslug";
+        }
     }else{
         if($order != ""){
             $order .= ", ";
         }
         $order .= "vendslug";
-    }
-    if($model && $model != "all"){
-        $cond[] = "models.id=" . $model;
-        if($order != ""){
-            $order .= ", ";
-        }
-        $order .= "yearname";
-    }else{
-        if($order != ""){
-            $order .= ", ";
-        }
-        $order .= "modeslug";
-    }
-    if($year && $year != "all"){
-        $cond[] = "years.id=" . $year;
-        if($order != ""){
-            $order .= ", ";
-        }
-        $order .= "modiname";
-        $order .= "modislug";
-    }else{
-        if($order != ""){
-            $order .= ", ";
-        }
-        $order .= "yearslug";
     }
 
     if(sizeof($cond) != 0){
@@ -245,7 +245,7 @@ function get_row($arg, $data){
         $ans = "<tr class='skld'><form action='/adm/podbor_save/years/" . $data[substr($arg, 0, 4) . "id"] . "/' method='post'>
                     <input type='hidden' value='update' name='mode'>
                     <td name='id' class='identificator'>" . $data[substr($arg, 0, 4) . "id"] . "</td>
-                    <td class='nm'>" . $data[substr($arg, 0, 4) . "name"] . "</td>
+                    <td class='nm'>" . $data["vendname"] . "</td>
                     <td class='nm'><select name='model'>";
 
         for($i = 0;$i < sizeof($models);$i++){
@@ -316,7 +316,7 @@ function get_filters($arg){
         $ans .= "<select id='filter_vend' name='vend' onchange='filter_add(1)'>
                     <option value='all'>все</option>";
         
-        $vendors = $dbcon->query("SELECT id, name FROM vendors")->fetchAll(PDO::FETCH_ASSOC);
+        $vendors = $dbcon->query("SELECT id, name FROM vendors ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 
         for($i = 0;$i < sizeof($vendors);$i++){
             $ans .= "<option value='" . $vendors[$i]["id"] . "'>" . $vendors[$i]["name"] . "</option>";

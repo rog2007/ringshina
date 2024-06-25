@@ -8,10 +8,10 @@ require("connect.php");
 $vend = filter_input(INPUT_GET, "vend", FILTER_VALIDATE_INT);
 $model = filter_input(INPUT_GET, "model", FILTER_VALIDATE_INT);
 if($vend){
-    $models = $dbcon->query("SELECT name, id FROM models WHERE parentId=" . $vend)->fetchAll(PDO::FETCH_ASSOC);
+    $models = $dbcon->query("SELECT name, id FROM models WHERE parentId=" . $vend . " ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($models);
 }else if($model){
-    $years = $dbcon->query("SELECT id, name FROM years where parentId=" . $model)->fetchAll(PDO::FETCH_ASSOC);
+    $years = $dbcon->query("SELECT id, name FROM years where parentId=" . $model . " ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($years);
 }
 ?>
